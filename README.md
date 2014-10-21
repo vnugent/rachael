@@ -1,4 +1,4 @@
-rachael
+Rachael
 =======
 
-ircbot for kubernetes/openshift-origin 
+Rachael is an ircbot designed to help you quickly deploy apps to kubernetes/openshift-origin
