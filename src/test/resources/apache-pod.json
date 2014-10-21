@@ -1,0 +1,19 @@
+{
+  "id": "apache",
+  "desiredState": {
+    "manifest": {
+      "version": "v1beta1",
+      "id": "apache-1",
+      "containers": [{
+        "name": "master",
+        "image": "fedora/apache",
+        "ports": [{
+          "name": "apache-port", "containerPort": 80
+                  }]
+      }]
+    }
+  },
+  "labels": {
+    "name": "apache"
+  }
+}

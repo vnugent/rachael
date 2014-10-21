@@ -1,0 +1,6 @@
+{
+	"type": "redis",
+	"name": "redis demo app",
+	"pod" : "redis-pod.json",
+	"services": ["redis-service.json"]
+}

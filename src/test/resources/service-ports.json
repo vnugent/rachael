@@ -1,0 +1,7 @@
+{
+"portMap": {
+	"apache": {"min": 5000,"max": 5499},
+	"redis": {"min": 5500,"max": 5999},	
+	"undefined": {"min": 6000, "max": 6499}
+}
+}	

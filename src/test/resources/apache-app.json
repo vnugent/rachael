@@ -1,0 +1,6 @@
+{
+	"type": "apache",
+	"name": "Apache demo app",
+	"pod" : "apache-pod.json",
+	"services": ["apache-service.json"]
+}
