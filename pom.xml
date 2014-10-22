@@ -78,6 +78,12 @@
 		        </archive>
                 <finalName>rachael-jar-with-dependencies</finalName>
                 <appendAssemblyId>false</appendAssemblyId>
+				<files>
+				    <file>
+			  			<source>src/main/resources/Dockerfile</source>
+                        <outputDirectory>/</outputDirectory>
+                    </file>
+				</files>
 			  </configuration>
 			  <executions>
 			    <execution>
@@ -89,30 +95,6 @@
 			    </execution>
 			  </executions>
 			</plugin>		
-			<plugin>
-				<groupId>com.spotify</groupId>
-				<artifactId>docker-maven-plugin</artifactId>
-				<version>0.0.21</version>
-				<configuration>
-				<imageName>vnguyen/rachael-ircbot</imageName>
-				<dockerDirectory>src/main/resources</dockerDirectory>
-				    <resources>
-				       <resource>
-				         <targetPath>/</targetPath>
-				         <directory>${project.build.directory}</directory>
-				         <include>${project.build.finalName}.jar</include>
-				       </resource>
-				    </resources>
-				</configuration>			  
-			  <executions>
-			    <execution>
-			      <phase>package</phase>
-			      <goals>
-			        <goal>build</goal>
-			      </goals>
-			    </execution>
-			  </executions>
-			</plugin>				
     	</plugins>
 	</build>  
 </project>
