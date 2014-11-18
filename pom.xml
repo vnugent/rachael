@@ -10,7 +10,8 @@
   <name>rachael</name>
 
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.final.single.jar>rachael</project.final.single.jar> 
   </properties>
 
   <dependencies>
@@ -67,23 +68,18 @@
 			  <artifactId>maven-assembly-plugin</artifactId>
 			  <version>2.4.1</version>
 			  <configuration>
-			    <descriptorRefs>
-			      <descriptorRef>jar-with-dependencies</descriptorRef>
-			    </descriptorRefs>
-			    <archive>
-            		<manifest>
-            			<addClasspath>true</addClasspath>
-              			<mainClass>org.vnguyen.appbuilder.irc.ChatBot</mainClass>
-		            </manifest>
-		        </archive>
-                <finalName>rachael-jar-with-dependencies</finalName>
-                <appendAssemblyId>false</appendAssemblyId>
-				<files>
-				    <file>
-			  			<source>src/main/resources/Dockerfile</source>
-                        <outputDirectory>/</outputDirectory>
-                    </file>
-				</files>
+				<descriptorRefs>
+				  <descriptorRef>jar-with-dependencies</descriptorRef>
+				</descriptorRefs>
+				<archive>
+				  	<manifest>
+				  		<addClasspath>true</addClasspath>
+				  		<mainClass>org.vnguyen.appbuilder.irc.ChatBot</mainClass>
+				    </manifest>
+				</archive>
+				<finalName>${project.final.single.jar}</finalName>
+				<appendAssemblyId>false</appendAssemblyId>
+				<attach>false</attach>
 			  </configuration>
 			  <executions>
 			    <execution>
@@ -94,7 +90,24 @@
 			      </goals>
 			    </execution>
 			  </executions>
-			</plugin>		
+			</plugin>	
+            <plugin>
+            <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.0.21</version>
+                <configuration>
+                    <baseImage>vnguyen/fedora-java:openjdk-7-jdk</baseImage>
+                    <imageName>vnguyen/rachael</imageName>
+                    <cmd>["java", "-jar", "/opt/${project.final.single.jar}.jar"]</cmd>
+                    <resources>
+                        <resource>
+                            <targetPath>/opt</targetPath>
+                            <directory>${project.build.directory}</directory>
+                            <include>${project.final.single.jar}.jar</include>
+                        </resource>
+                    </resources>
+                </configuration>
+             </plugin>  				
     	</plugins>
 	</build>  
 </project>
