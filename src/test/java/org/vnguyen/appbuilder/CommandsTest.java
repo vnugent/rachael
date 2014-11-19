@@ -28,7 +28,7 @@ public class CommandsTest {
 		Map<String, String> apps = main.cmds().listApp();
 		Assert.assertTrue(apps.size() > 0, "should have at least one app");
 		
-		AppTemplate appTemplate = main.cmds().createApp("unittest", "apache");
+		AppTemplate appTemplate = main.cmds().createApp("unittest", "redis");
 		
 		Thread.sleep(10000);
 		Pod pod = appTemplate.getPod();

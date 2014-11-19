@@ -52,7 +52,7 @@ public class AppBuilder {
     		try {
 				int[] freePorts = portManager.getAvailablePorts(appTemplate.appMetadata().getType(), 1);
 	    		service.setPort(freePorts[0]);
-	    		service.setId(podId + "-p" + service.getPort());
+	    		service.setId(idGenerator.generate(appTemplate.appMetadata()));
 	    		Selector selector = new Selector();
 	    		selector.setName(podId);
 	    		service.setSelector(selector);
