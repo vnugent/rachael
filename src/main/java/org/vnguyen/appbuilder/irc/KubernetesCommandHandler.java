@@ -8,7 +8,7 @@ import org.pircbotx.hooks.ListenerAdapter;
 import org.pircbotx.hooks.events.PrivateMessageEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vnguyen.appbuilder.Main;
+import org.vnguyen.appbuilder.AppContext;
 import org.vnguyen.appbuilder.model.ServiceEndpoint;
 
 import com.google.common.util.concurrent.FutureCallback;
@@ -18,9 +18,11 @@ import com.google.common.util.concurrent.ListenableFuture;
 public class KubernetesCommandHandler extends ListenerAdapter<PircBotX> {
 	private Logger log = LoggerFactory.getLogger(KubernetesCommandHandler.class);
 
-	private Main mainApp;
+	private AppContext mainApp;
+	private ChatBot bot;
 
-	public KubernetesCommandHandler(Main mainApp) {
+	public KubernetesCommandHandler(ChatBot bot, AppContext mainApp) {
+		this.bot = bot;
 		this.mainApp = mainApp;
 	}
 
@@ -30,7 +32,6 @@ public class KubernetesCommandHandler extends ListenerAdapter<PircBotX> {
 		if (message == null) {
 			return;
 		}
-		
 		String safeNick = getSafeNick(event.getUser().getNick());
 
 		Map<String, String> apps = mainApp.cmds().listApp();
@@ -45,7 +46,9 @@ public class KubernetesCommandHandler extends ListenerAdapter<PircBotX> {
 				event.respond("App name not found: " + appName); 
 			}
 		} else {
-			event.respond("Welcome to Saasbot! Powered by Kubernetes and soon to be Openshift v3");
+			for(String s : bot.welcomeMessage()) {
+				event.respond(s);
+			}
 			event.respond("!app_name to create new app.  Available apps: " + apps.keySet().toString());
 		}
 	}
@@ -68,12 +71,12 @@ public class KubernetesCommandHandler extends ListenerAdapter<PircBotX> {
 				for(Map.Entry<String, Long> entry : result.port().entrySet()) {
 					event.respond("   " + entry.getKey() + " --> " + result.hostIP() + ":" + entry.getValue());
 				}
+				event.respond("-end-");
 			}
 			
 
 			@Override
 			public void onFailure(Throwable t) {
-
 				event.respond(t.getMessage());
 			}
 		});

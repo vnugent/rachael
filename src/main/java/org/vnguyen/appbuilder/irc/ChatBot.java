@@ -1,17 +1,28 @@
 package org.vnguyen.appbuilder.irc;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.List;
+
+import org.apache.commons.io.IOUtils;
 import org.pircbotx.Configuration;
-import org.pircbotx.PircBotX;
 import org.pircbotx.Configuration.Builder;
-import org.vnguyen.appbuilder.Main;
+import org.pircbotx.PircBotX;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.vnguyen.appbuilder.AppContext;
 import org.vnguyen.appbuilder.Utils;
 
+import com.google.common.collect.ImmutableList;
+
 public class ChatBot {
+	private static Logger log = LoggerFactory.getLogger(ChatBot.class);
 
+	private List<String> welcomeMessage;
+	
 	public ChatBot() {
-
-		Main mainAppBuilder = new Main();
-		KubernetesCommandHandler cmdHandler= new KubernetesCommandHandler(mainAppBuilder);
+		AppContext mainAppBuilder = new AppContext();
+		KubernetesCommandHandler cmdHandler= new KubernetesCommandHandler(this, mainAppBuilder);
 		Builder<PircBotX> config = parseParams();
 		config.addListener(cmdHandler);
     	PircBotX myBot = new PircBotX(config.buildConfiguration());
@@ -23,6 +34,10 @@ public class ChatBot {
 	}
 	
 	public Builder<PircBotX> parseParams() {
+		
+		String welcomeFile = System.getenv("SAAS_WELCOME_FILE");
+		welcomeMessage = (welcomeFile == null) ? defaultWelcomeMessage() : loadWelcomeFile(welcomeFile);
+		
 		String ircServer = System.getenv("SAAS_IRC_SERVER");
 		if (ircServer == null) {
 			throw new RuntimeException("Missing SAAS_IRC_SERVER env variable");
@@ -44,6 +59,24 @@ public class ChatBot {
 	   		config.addAutoJoinChannel(channel);
 	   	}
 	    return config;	
+	}
+	
+	public List<String> loadWelcomeFile(String fileName) {
+		try {
+			FileInputStream is = new FileInputStream(fileName);
+			return IOUtils.readLines(is);
+		} catch (IOException e) {
+			log.error("Unable to load welcome file '{}'.  Using default text", fileName);
+		}
+		return defaultWelcomeMessage();
+	}
+	
+	protected List<String> defaultWelcomeMessage() {
+		return ImmutableList.of("Welcome to PaaS chatbot!");
+	}
+	
+	public List<String> welcomeMessage() { 
+		return this.welcomeMessage; 
 	}
 	
 	public static void main(String[] args) {

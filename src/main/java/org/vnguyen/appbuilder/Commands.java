@@ -19,19 +19,19 @@ import com.google.common.util.concurrent.MoreExecutors;
 public class Commands {
 	private Logger log = LoggerFactory.getLogger(Commands.class);
 	private final String APP_FILE_SUFFIX = "-app.json";
-	private Main mainContext;
+	private AppContext mainContext;
 	private ListeningExecutorService executorService = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(10));
 
 	public Commands() {
 
 	}
 	
-	public Commands setAppContext(Main context) {
+	public Commands setAppContext(AppContext context) {
 		this.mainContext = context;
 		return this;
 	}
 	
-	public Main appContext() {
+	public AppContext appContext() {
 		return mainContext;
 	}
 	

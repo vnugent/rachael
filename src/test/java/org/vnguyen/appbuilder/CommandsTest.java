@@ -16,7 +16,7 @@ public class CommandsTest {
 
 	@Test
 	public void appListTest() throws Exception {
-		Main main = new Main();
+		AppContext main = new AppContext();
 		Map<String, String> apps = main.cmds().listApp();	
 		
 		Assert.assertEquals(apps.keySet(), ImmutableSet.of("apache", "redis"));
@@ -24,7 +24,7 @@ public class CommandsTest {
 	
 	@Test
 	public void createAppTest() throws Exception {
-		Main main = new Main();
+		AppContext main = new AppContext();
 		Map<String, String> apps = main.cmds().listApp();
 		Assert.assertTrue(apps.size() > 0, "should have at least one app");
 		

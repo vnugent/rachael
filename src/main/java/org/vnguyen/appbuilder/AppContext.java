@@ -3,18 +3,14 @@ package org.vnguyen.appbuilder;
 import org.apache.stratos.kubernetes.api.client.v2.KubernetesApiClient;
 import org.apache.stratos.kubernetes.api.exceptions.KubernetesClientException;
 
-/**
- * Entry point for Rachael app
- *
- */
-public class Main {
+public class AppContext {
 	private KubernetesApiClient kubernetesClient ;
 	private PortManagerForServices portManager;
 	private AppBuilder appBuilder;
 	private Commands commands;
 	final private String dataDir;
 	
-	public Main() {		
+	public AppContext() {		
     	String apiEndpoint = Utils.getEnvStrict("KUBERNETES_API_ENDPOINT");
     	dataDir = Utils.getEnvStrict("RACHAEL_DATA_DIR");
 		kubernetesClient = new  KubernetesApiClient(apiEndpoint);
