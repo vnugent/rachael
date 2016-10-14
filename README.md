@@ -1,4 +1,4 @@
 Rachael
 =======
 
-Rachael is an ircbot designed to help you quickly deploy apps to kubernetes/openshift-origin
+Rachael is an IRC bot designed to help you deploy instant apps to Kubernetes/OpenShift.

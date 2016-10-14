@@ -10,7 +10,6 @@ import org.pircbotx.Configuration.Builder;
 import org.pircbotx.PircBotX;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vnguyen.appbuilder.AppContext;
 import org.vnguyen.appbuilder.Utils;
 
 import com.google.common.collect.ImmutableList;
@@ -21,19 +20,22 @@ public class ChatBot {
 	private List<String> welcomeMessage;
 	
 	public ChatBot() {
-		AppContext mainAppBuilder = new AppContext();
-		KubernetesCommandHandler cmdHandler= new KubernetesCommandHandler(this, mainAppBuilder);
-		Builder<PircBotX> config = parseParams();
-		config.addListener(cmdHandler);
-    	PircBotX myBot = new PircBotX(config.buildConfiguration());
+		//AppContext mainAppBuilder = new AppContext();
+	//	OpenShiftCommandHandler cmdHandler= new OpenShiftCommandHandler(this, mainAppBuilder);
+		Builder configBuilder = parseParams();
+		//configBuilder.addListener(cmdHandler);
+    	PircBotX myBot = new PircBotX(configBuilder.buildConfiguration());
     	try {
     		myBot.startBot();
     	} catch (Exception e) {
    			e.printStackTrace(); 		
-    	}		
+    	}	
+    	finally {
+    		myBot.close();
+    	}
 	}
 	
-	public Builder<PircBotX> parseParams() {
+	public Builder parseParams() {
 		
 		String welcomeFile = System.getenv("SAAS_WELCOME_FILE");
 		welcomeMessage = (welcomeFile == null) ? defaultWelcomeMessage() : loadWelcomeFile(welcomeFile);
@@ -49,16 +51,16 @@ public class ChatBot {
 		}
 		String[] channels = ircChannelCSV.split(",");
 		
-		Builder<PircBotX> config = new Configuration.Builder<PircBotX>();
+		Builder builder = new Configuration.Builder();
 		
-		config.setName(Utils.getEnvWithDefault("SAAS_IRCBOT_NIC", "saas-bot"))
+		builder.setName(Utils.getEnvWithDefault("SAAS_IRCBOT_NIC", "saas-bot"))
 			.setAutoNickChange(true)
-			.setServer(ircServer, 6667);
+			.addServer(ircServer, 6667);
 			
 	    for(String channel : channels) {
-	   		config.addAutoJoinChannel(channel);
+	   		builder.addAutoJoinChannel(channel);
 	   	}
-	    return config;	
+	    return builder;	
 	}
 	
 	public List<String> loadWelcomeFile(String fileName) {

@@ -1,0 +1,90 @@
+apiVersion: v1
+kind: Template
+labels:
+  template: rachael
+metadata:
+  annotations:
+    description: Chatbot for Openshift
+    iconClass: icon-app-code
+    tags: instant-app,quickstart
+  name: rachael
+objects:
+- 
+  apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    name: ${NAME}
+  spec:
+    replicas: 1
+    selector:
+      name: ${NAME}
+    template:
+      metadata:
+        labels:
+          name: ${NAME}
+      name: ${NAME}
+      spec:
+        containers:
+          -
+            name: rachael
+            image: "vnguyen/rachael:latest"
+            env:
+              -
+                name: OB_IRC_SERVER
+                value: ${IRC_SERVER}
+              -
+                name: OB_NICK
+                value: ${NICK}
+              -
+                name: OB_IRC_CHANNELS
+                value: ${IRC_CHANNELS}
+              -
+                name: OB_OPENSHIFT_ENDPOINT
+                value: ${OPENSHIFT_API}
+              -
+                name: OB_API_USER
+                value: ${API_USER}
+              -
+                name: OB_API_PASSWORD
+                value: ${API_PASSWORD}
+            resources:
+              limits:
+                memory: 512Mi
+            imagePullPolicy: Always
+        restartPolicy: Always
+parameters:
+- 
+  description: The name assigned to all of the frontend objects defined in this template.
+  displayName: Name
+  name: NAME
+  required: true
+  value: rachael
+- 
+  description: IRC server
+  displayName: IRC server
+  name: IRC_SERVER
+  value: chat.freenode.net
+- 
+  description: "CSV list of channels. Example, #my-channel, #more-channel"
+  displayName: Channels
+  name: IRC_CHANNELS
+  value: "#rachael-chatbot"
+- 
+  description: Set nickname for the bot
+  displayName: NICK
+  name: NICK
+  value: openshift-bot
+- 
+  description: OpenShift API endpoint.  Example, https://myopenshift.server.company.com
+  displayName: Openshift API
+  name: OPENSHIFT_API
+- 
+  description: OpenShift API user name
+  displayName: API user name
+  name: API_USER
+  required: true
+- 
+  description: API password
+  displayName: API password
+  name: API_PASSWORD
+  required: true
