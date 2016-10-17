@@ -40,7 +40,7 @@ The bot supports limited `oc` syntax.  By default your IRC nick is used as the t
  oc list-app [--namespace=<project>]
  ```
  
- ### Show more details about an app
+### Show more details about an app
  ```
  oc get-app <DeploymentConfig> [--namespace=<project>]
  ```
