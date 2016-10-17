@@ -1,12 +1,9 @@
 package org.vnguyen.rachael;
 
-import java.io.IOException;
-
 import javax.inject.Inject;
 
 import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
-import org.pircbotx.exception.IrcException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -24,10 +21,14 @@ public class IRCBot {
 	
 	private PircBotX bot;
 	
-	public void start() throws IrcException, IOException {
-		logger.debug("Starting IRCBot object");
+	public void start() {
 		bot = new PircBotX(configure());
-		bot.startBot();
+		try {
+			logger.info("Starting IRCBot");
+			bot.startBot();
+		} catch (Exception e) {
+			logger.error("Error: {}", e);
+		}
 	}
 	
 	private Configuration configure() {
@@ -37,6 +38,7 @@ public class IRCBot {
            		.addListener(listener)
            		.addAutoJoinChannels(params.channels)
            		.setAutoReconnectDelay(60)
+           		.setAutoReconnect(true)
            .buildConfiguration();	
 		return configuration;
 	}

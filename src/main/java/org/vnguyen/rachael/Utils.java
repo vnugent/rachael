@@ -1,22 +1,6 @@
-package org.vnguyen.appbuilder;
-
-import java.io.File;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
+package org.vnguyen.rachael;
 
 public class Utils {
-
-	
-	public static <T> T load(Class<T> clz, File jsonFile) {
-	    ObjectMapper mapper = new ObjectMapper();  
-
-	    try {
-			return mapper.readValue(jsonFile, clz);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		} 	
-	}
-
 	public static String getEnvStrict(String name) {
 		String value = System.getenv(name);
 		if (value == null) {
@@ -29,5 +13,4 @@ public class Utils {
 		String value = System.getenv(name);
 		return value == null ? defaultVal : value;
 	}
-	
 }
