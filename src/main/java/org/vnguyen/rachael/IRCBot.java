@@ -21,13 +21,16 @@ public class IRCBot {
 	
 	private PircBotX bot;
 	
-	public void start() {
+	public void start() throws InterruptedException {
 		bot = new PircBotX(configure());
-		try {
-			logger.info("Starting IRCBot");
-			bot.startBot();
-		} catch (Exception e) {
-			logger.error("Error: {}", e);
+		while (true) {
+			try {
+				logger.info("Starting IRCBot");
+				bot.startBot();
+			} catch (Exception e) {
+				logger.error("Error: {}", e);
+			}
+			Thread.sleep(bot.getConfiguration().getAutoReconnectDelay()*1000);
 		}
 	}
 	

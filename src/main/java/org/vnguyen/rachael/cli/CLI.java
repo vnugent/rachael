@@ -52,16 +52,15 @@ public class CLI {
 	 * @throws ParseException
 	 */
 	public Task<?> parse(String userid, String[] args) throws ParseException {
+		LOGGER.debug("uid: {}, args: {}", userid, args);
 		if (args.length < 2) {
-			//TODO return 'help' task
 			throw new ParseException("Too few parameters");
 		}
-		Task<?> taskParser = commands.get(args[1]);
-		LOGGER.info("Found task: " + taskParser);
-		
-		if (taskParser != null) {
-			taskParser.parse(userid, parser, Arrays.copyOfRange(args, 2, args.length));
-			return taskParser;
+		Task<?> task = commands.get(args[1]);
+		LOGGER.debug("uid: {}, found task: {}", userid, task);
+		if (task != null) {
+			task.parse(userid, parser, Arrays.copyOfRange(args, 2, args.length));
+			return task;
 		} else {
 			throw new RuntimeException("Invalid verb: " + args[1]);
 		}

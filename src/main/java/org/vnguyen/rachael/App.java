@@ -20,7 +20,7 @@ public class App {
     }
 	
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		ApplicationContext ctx = 
 			      new AnnotationConfigApplicationContext(App.class);
 		
