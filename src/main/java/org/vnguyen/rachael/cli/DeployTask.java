@@ -3,7 +3,6 @@ package org.vnguyen.rachael.cli;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.ParseException;
 import org.springframework.stereotype.Service;
@@ -16,25 +15,18 @@ import com.openshift.restclient.model.IProject;
 public class DeployTask extends AbstractBaseTask<List<IDeploymentConfig>> {
 	public static final String VERB = "deploy";
 
-	protected String projectName;
 	protected boolean deployNow = false;
 	protected String dcName;
 	
 	public DeployTask() {
-		 Option latestOption = Option.builder("l")
+		super(true);
+		Option latestOption = Option.builder("l")
                  .longOpt("latest")
                  .required(false)
                  .desc("Start a new deployment now")
                  .build();
-		 
-		 Option namespaceOption = Option.builder("n")
-				 	.longOpt("namespace")
-				 	.required(false)
-				 	.desc("Namespace")
-				 	.hasArg()
-				 	.build();
-		 opts.addOption(latestOption)
-		 	 .addOption(namespaceOption);
+	
+		opts.addOption(latestOption);
 	}
 	
 	@Override
@@ -43,15 +35,10 @@ public class DeployTask extends AbstractBaseTask<List<IDeploymentConfig>> {
 	}
 
 	@Override
-	public void parse(String userid, CommandLineParser parser, String[] arguments) throws ParseException {
-		CommandLine cli = parser.parse(opts, arguments);
-		deployNow = cli.hasOption("l");
+	public void parse(String userid, CommandLine cmdLine, String[] arguments) throws ParseException {
+		deployNow = cmdLine.hasOption("l");
 		if (arguments.length < 1) {
 			throw new ParseException("Missing deployment config name");
-		}
-		projectName = cli.getOptionValue('n');
-		if (projectName == null) {
-			projectName = userid;
 		}
 		dcName = arguments[0];
 	}

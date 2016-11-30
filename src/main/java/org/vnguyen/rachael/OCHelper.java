@@ -168,7 +168,7 @@ public class OCHelper {
 		Map<String, List<IResource>> result = new HashMap<String, List<IResource>>();
 		for(String kind: resourcesKinds) {
 			if (ResourceKind.values().contains(kind)) {
-				List<IResource> res =  client.list(kind, project.getName(), labels);
+				List<IResource> res =  client.list(kind, project.getName());
 				result.put(kind, res);
 			} else {
 				//TODO log error

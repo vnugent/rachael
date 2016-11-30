@@ -27,7 +27,7 @@ public class CommandExecutor {
 	
 	public void execute(String userid, String command, PrivateMessageEvent event) throws ParseException {
 		String[] args = command.split(" ");
-		Task<?> task = cli.parse(userid, args);
+		Task<?> task = cli.findCommand(userid, args);
 		ListenableFuture<? extends TaskOutputIF<?>> futureResponse = executorService.submit(task);
 		
 		event.respond("Command accepted.  Please wait...");

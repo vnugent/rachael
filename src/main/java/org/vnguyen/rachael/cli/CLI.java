@@ -37,6 +37,7 @@ public class CLI {
 		 	.put(GetAppTask.VERB, applicationContext.getBean(GetAppTask.class))
 		 	.put(DeployTask.VERB, applicationContext.getBean(DeployTask.class))
 		 	.put(ListAppTask.VERB, applicationContext.getBean(ListAppTask.class))
+		 	.put(ListTemplateCmd.VERB, applicationContext.getBean(ListTemplateCmd.class))
 		 	.put(HelpTask.VERB, applicationContext.getBean(HelpTask.class))
 		 	.build();
 	}
@@ -51,7 +52,7 @@ public class CLI {
 	 * @return
 	 * @throws ParseException
 	 */
-	public Task<?> parse(String userid, String[] args) throws ParseException {
+	public Task<?> findCommand(String userid, String[] args) throws ParseException {
 		LOGGER.debug("uid: {}, args: {}", userid, args);
 		if (args.length < 2) {
 			throw new ParseException("Too few parameters");
@@ -59,7 +60,7 @@ public class CLI {
 		Task<?> task = commands.get(args[1]);
 		LOGGER.debug("uid: {}, found task: {}", userid, task);
 		if (task != null) {
-			task.parse(userid, parser, Arrays.copyOfRange(args, 2, args.length));
+			task.processArgs(userid, parser, Arrays.copyOfRange(args, 2, args.length));
 			return task;
 		} else {
 			throw new RuntimeException("Invalid verb: " + args[1]);

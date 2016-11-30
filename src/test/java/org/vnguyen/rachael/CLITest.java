@@ -39,7 +39,7 @@ public class CLITest extends AbstractTestNGSpringContextTests {
 	public void newAppTest() throws Exception {
 	    String[] args = new String[]{"oc", "new-app", "--template", "hawkular-full", "-n", "myproject"};
 			
-	    Task<?> task = cli.parse("jdoe", args);
+	    Task<?> task = cli.findCommand("jdoe", args);
 	    Assert.assertTrue(task instanceof NewAppTask);
 
 	    task.call();
@@ -51,7 +51,7 @@ public class CLITest extends AbstractTestNGSpringContextTests {
 	public void newAppTestWithoutNamespace() throws Exception {
 	    String[] args = new String[]{"oc", "new-app", "--template", "jenkins"};
 	    
-	    Task<?> task = cli.parse("jdoe", args);
+	    Task<?> task = cli.findCommand("jdoe", args);
 	    task.call();
 	    verify(mockOC).getProject("jdoe");  // namespace is defaulted to userid
 	}
@@ -61,7 +61,7 @@ public class CLITest extends AbstractTestNGSpringContextTests {
 	public void parseTest() throws Exception {
 		String[] args = new String[]{"oc", "foobar"};
 		try {
-			Task<?> task = cli.parse("abc", args);
+			Task<?> task = cli.findCommand("abc", args);
 		} catch(RuntimeException e1) {
 			Assert.assertTrue(e1.getMessage().contains("verb"));
 			return;
@@ -73,7 +73,7 @@ public class CLITest extends AbstractTestNGSpringContextTests {
 	@Test
 	public void getHelpTest1() throws Exception {
 	    String[] args = new String[] {"oc", "help", "new-app"};
-	    HelpTask task = (HelpTask)cli.parse("user1", args);
+	    HelpTask task = (HelpTask)cli.findCommand("user1", args);
 	    TaskOutputIF<String> helpText = task.call();
 	    List<String> multiLines = helpText.transform();
 	    Assert.assertTrue(multiLines.size()>=4, "At least 3 lines");

@@ -7,8 +7,12 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vnguyen.rachael.OCHelper;
@@ -28,8 +32,47 @@ public abstract class AbstractBaseTask<T> implements Task<T> {
 	protected final Options opts = new Options();
 	protected final HelpFormatter formatter = new HelpFormatter();
 
+	protected String projectName;
+	
+	/**
+	 * Specify projectNameRequired=true if the backend requires project name
+	 * for this operation
+	 * @param projectNameRequired
+	 */
+	public AbstractBaseTask(boolean projectNameRequired) {
+		 Option namespaceOption = Option.builder("n")
+				 	.longOpt("namespace")
+				 	.required(projectNameRequired)
+				 	.desc("Namespace")
+				 	.hasArg()
+				 	.build();
+		 
+		 opts.addOption(namespaceOption);
+	}
 
-
+	@Override
+	public void processArgs(String userid, CommandLineParser parser, String[] arguments) throws ParseException {
+		CommandLine cli = parser.parse(opts, arguments);
+		if (opts.getOption("namespace").isRequired()) {
+			projectName = cli.getOptionValue('n');
+			if (projectName == null) {
+				projectName = userid;
+			}
+		}
+		parse(userid, cli, arguments);
+	}
+	
+	/**
+	 * Template method for additional parsing of command options and arguments
+	 * @param userid
+	 * @param cmdLine
+	 * @param arguments
+	 * @throws ParseException
+	 */
+	protected void parse(String userid, CommandLine cmdLine, String[] arguments) throws ParseException {
+		
+	}
+	
 	@Override
 	public Task<T> addPolicy(Class<? extends Policy> clz) {
 		this.policies.add(clz);

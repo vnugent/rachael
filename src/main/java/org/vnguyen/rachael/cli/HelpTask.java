@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,13 +22,17 @@ public class HelpTask extends AbstractBaseTask<String>  {
 	
 	protected Task<?> helpContext;
 	
+	public HelpTask() {
+		super(false);
+	}
+	
 	@Override
 	public String verb() {
 		return VERB;
 	}
 
 	@Override
-	public void parse(String userid, CommandLineParser parser,
+	public void parse(String userid, CommandLine cmdLine,
 			String[] arguments) throws ParseException {
 	    String helpKeyword =(arguments.length == 0)? "" : arguments[0]; 
 	    helpContext = cli.commands.get(helpKeyword);
@@ -45,12 +49,12 @@ public class HelpTask extends AbstractBaseTask<String>  {
 
 		    @Override
 		    public List<String> transform() {
-			return Arrays.asList(helpText.split("\\n"));
+		    	return Arrays.asList(helpText.split("\\n"));
 		    }
 
 		    @Override
 		    public String rawResult() {
-			return helpText;
+		    	return helpText;
 		    }};
 	}
 }

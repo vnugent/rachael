@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.Option;
 import org.apache.commons.cli.ParseException;
 import org.springframework.stereotype.Service;
 
@@ -19,18 +17,10 @@ public class GetAppTask extends AbstractBaseTask<Map<String, List<IResource>>> {
 	public static final String VERB = "get-app";
 	public static final String HELP_STRING = "oc get-app <deployment config name> --namespace <your namespace>";
 
-	protected String projectName;
 	protected String dcName;
 
 	public GetAppTask() {
-		 Option namespaceOption = Option.builder("n")
-				 	.longOpt("namespace")
-				 	.required(false)
-				 	.desc("Namespace")
-				 	.hasArg()
-				 	.build();
-		 
-		 opts.addOption(namespaceOption);
+		super(true);
 	}
 
 	@Override
@@ -39,15 +29,11 @@ public class GetAppTask extends AbstractBaseTask<Map<String, List<IResource>>> {
 	}
 
 	@Override
-	public void parse(String userid, CommandLineParser parser, String[] arguments) throws ParseException {
+	public void parse(String userid, CommandLine cmdLine, String[] arguments) throws ParseException {
 		if (arguments.length == 0) {
 			throw new RuntimeException("Missing app template");
 		}
-		CommandLine cli = parser.parse(opts, arguments);
-		projectName = cli.getOptionValue('n');
-		if (projectName == null) {
-			projectName = userid;
-		}
+
 		dcName = arguments[0];
 		LOGGER.debug("userid={}, projectName={}, args={}", userid, projectName, arguments);
 	}

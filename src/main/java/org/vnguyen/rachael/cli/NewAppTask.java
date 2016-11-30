@@ -3,7 +3,6 @@ package org.vnguyen.rachael.cli;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.ParseException;
 import org.springframework.stereotype.Service;
@@ -20,26 +19,18 @@ import com.openshift.restclient.model.IResource;
 @Service
 public class NewAppTask extends AbstractBaseTask<List<IResource>> {
 	public static final String VERB = "new-app";
+	
 	protected String templateName;
-	protected String projectName;
 	
 	public NewAppTask() {
-		 Option templateOption = Option.builder("t")
-                 .longOpt("template")
-                 .required(true)
-                 .desc("Template name")
-                 .hasArg()
-                 .build();
-		 
-		 Option namespaceOption = Option.builder("n")
-				 	.longOpt("namespace")
-				 	.required(false)
-				 	.desc("Namespace")
-				 	.hasArg()
-				 	.build();
-		 
-		 opts.addOption(templateOption)
-		 	 .addOption(namespaceOption);
+		super(true);
+		Option templateOption = Option.builder("t")
+		         .longOpt("template")
+		         .required(true)
+		         .desc("Template name")
+		         .hasArg()
+		         .build();
+		opts.addOption(templateOption);
 	}
 	
 	@Override
@@ -48,13 +39,8 @@ public class NewAppTask extends AbstractBaseTask<List<IResource>> {
 	}
 
 	@Override
-	public void parse(String userid, CommandLineParser parser, String[] args) throws ParseException {
-		CommandLine cli = parser.parse(opts, args);
-		templateName = cli.getOptionValue('t');
-		projectName = cli.getOptionValue('n');
-		if (projectName == null) {
-			projectName = userid;
-		}
+	public void parse(String userid, CommandLine cmdLine, String[] args) throws ParseException {
+		templateName = cmdLine.getOptionValue('t');
 	}
 	
 	@Override
