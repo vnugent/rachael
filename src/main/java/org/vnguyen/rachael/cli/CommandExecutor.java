@@ -6,7 +6,8 @@ import java.util.concurrent.Executors;
 import javax.inject.Inject;
 
 import org.apache.commons.cli.ParseException;
-import org.pircbotx.hooks.events.PrivateMessageEvent;
+import org.apache.commons.lang.StringUtils;
+import org.pircbotx.hooks.events.MessageEvent;
 import org.springframework.stereotype.Component;
 
 import com.google.common.util.concurrent.FutureCallback;
@@ -25,8 +26,8 @@ public class CommandExecutor {
 	private ListeningExecutorService executorService = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(10));
 	
 	
-	public void execute(String userid, String command, PrivateMessageEvent event) throws ParseException {
-		String[] args = command.split(" ");
+	public void execute(String userid, String command, MessageEvent event) throws ParseException {
+		String[] args = StringUtils.trim(command).split(" ");
 		Task<?> task = cli.findCommand(userid, args);
 		ListenableFuture<? extends TaskOutputIF<?>> futureResponse = executorService.submit(task);
 		
@@ -35,7 +36,7 @@ public class CommandExecutor {
 		processAsyncResponse(event, futureResponse);
 	}
 	
-	protected void processAsyncResponse(final PrivateMessageEvent event, ListenableFuture<? extends TaskOutputIF<?>> future) {
+	protected void processAsyncResponse(final MessageEvent event, ListenableFuture<? extends TaskOutputIF<?>> future) {
 		
 		Futures.addCallback(future, new FutureCallback<Object>() {
 			@Override

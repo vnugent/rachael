@@ -38,7 +38,7 @@ public class HelpTask extends AbstractBaseTask<String>  {
 	    helpContext = cli.commands.get(helpKeyword);
 	    LOGGER.debug("Help context: {}", helpContext);
 	    if (helpContext == null) {
-	        throw new RuntimeException("Missing or invalid help keyword: " + helpKeyword + "'.  Valid keywords " + cli.commands().keySet());
+	        throw new RuntimeException("Valid keywords " + cli.commands().keySet());
 	    }	
 	}
 
