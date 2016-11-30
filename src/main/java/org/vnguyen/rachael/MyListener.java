@@ -4,6 +4,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.pircbotx.hooks.ListenerAdapter;
+import org.pircbotx.hooks.events.MessageEvent;
 import org.pircbotx.hooks.events.PrivateMessageEvent;
 import org.springframework.stereotype.Component;
 import org.vnguyen.rachael.cli.CommandExecutor;
@@ -16,24 +17,30 @@ public class MyListener extends ListenerAdapter {
 	
 	@Inject 
 	private CommandExecutor commandExecutor;
-
+	
 	@Override
-	public void onPrivateMessage(PrivateMessageEvent event) {
+	public void onMessage(MessageEvent event) {
 		String message = StringUtils.trimToNull(event.getMessage());
 		if (message == null) {
 			return;
 		}
+		
+		String botNick = "@" + params.botNick;
+		
 		String safeNick = getSafeNick(event.getUser().getNick());
-		if (message.startsWith("oc")) {
-			try {
-				commandExecutor.execute(safeNick, message, event);
-			} catch (Exception e) {
-				event.respond("Error: " + e.getMessage());
+		if (message.startsWith(botNick)) {
+			String rawCmd = message.substring(botNick.length());
+			if (StringUtils.isNotEmpty(rawCmd)) {
+				try {
+					commandExecutor.execute(safeNick, rawCmd, event);
+				} catch (Exception e) {
+					event.respond("Error: " + e.getMessage());
+				}
 			}
-			
-		} else {
-			event.respond(params.welcomeMessage);
-		}
+			else {
+				event.respond(params.welcomeMessage);
+			}
+		} 
 	}
 	
 
