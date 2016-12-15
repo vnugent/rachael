@@ -25,7 +25,7 @@ public class MyListener extends ListenerAdapter {
 			return;
 		}
 		
-		String botNick = "@" + params.botNick;
+		String botNick = "!" + params.botNick;
 		
 		String safeNick = getSafeNick(event.getUser().getNick());
 		if (message.startsWith(botNick)) {
